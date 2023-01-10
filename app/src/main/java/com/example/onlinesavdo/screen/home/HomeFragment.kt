@@ -69,12 +69,9 @@ class HomeFragment : Fragment() {
         })
         viewModel.productData.observe(requireActivity(), Observer {
             binding.recyclerProducts.adapter = ProductAdapter(it)
-
-
         })
         loadData()
     }
-
     fun loadData() {
         viewModel.getOffers()
         viewModel.getCategories()
