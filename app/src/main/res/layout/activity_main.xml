@@ -19,6 +19,7 @@
             android:padding="8dp">
 
             <ImageView
+                android:id="@+id/btnMenu"
                 android:layout_width="28dp"
                 android:layout_height="28sp"
                 android:src="@drawable/ic_baseline_menu_24" />

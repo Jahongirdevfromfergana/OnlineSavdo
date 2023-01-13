@@ -32,7 +32,7 @@ class CategoryAdapter(val items: List<CategoryModel>, val callback: CategoryAdap
         val item = items[position]
         holder.itemView.setOnClickListener {
             items.forEach {
-                it.checked = false
+                item.checked = false
             }
             item.checked = true
             callback.onClick(item)

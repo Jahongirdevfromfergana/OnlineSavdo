@@ -11,8 +11,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.onlinesavdo.databinding.FragmentCartBinding
+import com.example.onlinesavdo.model.ProductModel
 import com.example.onlinesavdo.screen.MainViewModel
 import com.example.onlinesavdo.screen.makeorder.MakeOrderActivity
+import com.example.onlinesavdo.utils.Constant
 import com.example.onlinesavdo.utils.PrefUtils
 import com.example.onlinesavdo.view.CartAdapter
 import java.io.Serializable
@@ -56,7 +58,7 @@ class CartFragment : Fragment() {
         }
         binding.btnMakeOrder.setOnClickListener {
             val intent = Intent(requireActivity(), MakeOrderActivity::class.java)
-//            intent.putExtra(Constants.EXTRA_DATA, (viewModel.productsData.value ?: emptyList<ProductModel>()) as Serializable)
+            intent.putExtra(Constant.EXTRA_DATA, (viewModel.productData.value ?: emptyList<ProductModel>()) as Serializable)
             startActivity(intent)
         }
 

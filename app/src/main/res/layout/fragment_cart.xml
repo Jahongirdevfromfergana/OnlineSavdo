@@ -27,7 +27,7 @@
             android:layout_height="60dp"
             app:cornerRadius="16dp"
             android:layout_margin="8dp"
-            android:text="Make Order"/>
+            android:text="@string/make_order"/>
 
     </LinearLayout>
 

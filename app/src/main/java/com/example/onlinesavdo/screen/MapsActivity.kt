@@ -27,7 +27,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
         binding.confirmButton.setOnClickListener {
-            val addressModel = AddressModel(mMap.cameraPosition.zoom.toString(), mMap.cameraPosition.target.latitude, mMap.cameraPosition.target.longitude)
+            val addressModel = AddressModel("", mMap.cameraPosition.target.latitude, mMap.cameraPosition.target.longitude)
             EventBus.getDefault().post(addressModel)
             finish()
         }

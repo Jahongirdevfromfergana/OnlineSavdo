@@ -74,9 +74,10 @@ class HomeFragment : Fragment() {
     }
     fun loadData() {
         viewModel.getOffers()
-        viewModel.getCategories()
-        viewModel.getTopProducts()
-//         viewModel.getTopProducts()
+//        viewModel.getCategories()
+        viewModel.getAllDBCategories()
+//        viewModel.getTopProducts()
+        viewModel.getAllDBProducts()
     }
     companion object {
         @JvmStatic

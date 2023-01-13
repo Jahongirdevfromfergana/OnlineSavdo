@@ -19,12 +19,13 @@ class MakeOrderActivity : AppCompatActivity() {
         binding = ActivityMakeOrderBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
         items = intent.getSerializableExtra(Constant.EXTRA_DATA) as List<ProductModel>
 
         if (!EventBus.getDefault().isRegistered(this)){
             EventBus.getDefault().register(this)
         }
-        binding.tvTotalAmount.setText(items.sumByDouble { it.cartCount.toDouble()*(it.price.replace("", " ").toDoubleOrNull() ?: 0.0 )}.toString())
+        binding.tvTotalAmount.setText(items.sumByDouble { it.cartCount.toDouble()*(it.price.replace(" ", "").toDoubleOrNull() ?: 0.0 )}.toString())
 
         binding.addAddress.setOnClickListener {
             startActivity(Intent(this, MapsActivity::class.java))

@@ -1,15 +1,21 @@
 package com.example.onlinesavdo.screen
 
+import android.content.Context
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.example.onlinesavdo.R
 import com.example.onlinesavdo.databinding.ActivityMainBinding
 import com.example.onlinesavdo.screen.cart.CartFragment
+import com.example.onlinesavdo.screen.changelanguage.ChangeLanguageFragment
 import com.example.onlinesavdo.screen.favorite.FavoriteFragment
 import com.example.onlinesavdo.screen.home.HomeFragment
 import com.example.onlinesavdo.screen.user.UserFragment
+import com.example.onlinesavdo.utils.LocaleManager
 import com.onesignal.OneSignal
+import io.reactivex.Observable
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -23,12 +29,26 @@ class MainActivity : AppCompatActivity() {
 
     var activeFragment: Fragment = homeFragment
 
+    lateinit var viewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        viewModel = MainViewModel()
 
+
+        viewModel.productData.observe(this, Observer {
+           viewModel.insertAllProducts2DB(it)
+        })
+        viewModel.categoryData.observe(this, Observer {
+            viewModel.insertAllCategories2DB(it)
+        })
+
+        viewModel.errorData.observe(this, Observer {
+            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+        })
         // Enable verbose OneSignal logging to debug issues if needed.
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
 
@@ -42,15 +62,13 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .add(R.id.flContainer, homeFragment, homeFragment.tag).hide(homeFragment).commit()
         supportFragmentManager.beginTransaction()
-            .add(R.id.flContainer, favoriteFragment, favoriteFragment.tag).hide(favoriteFragment)
-            .commit()
+            .add(R.id.flContainer, favoriteFragment, favoriteFragment.tag).hide(favoriteFragment).commit()
         supportFragmentManager.beginTransaction()
             .add(R.id.flContainer, cartFragment, cartFragment.tag).hide(cartFragment).commit()
         supportFragmentManager.beginTransaction()
             .add(R.id.flContainer, userFragment, userFragment.tag).hide(userFragment).commit()
 
         supportFragmentManager.beginTransaction().show(activeFragment).commit()
-
 
         binding.bottomNavigationView.setOnItemSelectedListener {
             if (it.itemId == R.id.actionHome) {
@@ -72,5 +90,21 @@ class MainActivity : AppCompatActivity() {
             }
             return@setOnItemSelectedListener true
         }
+
+        binding.btnMenu.setOnClickListener {
+            var fragment = ChangeLanguageFragment.newInstance()
+            fragment.show(supportFragmentManager, fragment.tag)
+
+        }
+        loadData()
+    }
+    fun loadData(){
+        viewModel.getTopProducts()
+        viewModel.getCategories()
+
+    }
+
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase))
     }
 }

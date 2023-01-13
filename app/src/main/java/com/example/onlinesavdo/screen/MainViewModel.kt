@@ -1,25 +1,16 @@
 package com.example.onlinesavdo.screen
 
-import android.view.View
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.onlinesavdo.api.Api
-import com.example.onlinesavdo.api.NetworkManager
 import com.example.onlinesavdo.api.repository.Repository
-import com.example.onlinesavdo.model.BaseResponseModel
+import com.example.onlinesavdo.db.AppDataBese
 import com.example.onlinesavdo.model.CategoryModel
 import com.example.onlinesavdo.model.OfferModel
 import com.example.onlinesavdo.model.ProductModel
-import com.example.onlinesavdo.utils.Constant
-import com.example.onlinesavdo.view.ProductAdapter
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class MainViewModel: ViewModel() {
@@ -46,6 +37,35 @@ class MainViewModel: ViewModel() {
      fun getTopProductByIds(ids: List<Int>){
          repository.getTopProductsByIds(ids, progress, errorData, productData)
      }
+    fun insertAllProducts2DB(items: List<ProductModel>){
+        CoroutineScope(Dispatchers.IO).launch{
+//            AppDataBese.getDataBase().productDao().deleteAll()
+            AppDataBese.getDataBase().getProductsDao().insertAll(items)
+        }
+    }
+
+    fun insertAllCategories2DB(items: List<CategoryModel>){
+        CoroutineScope(Dispatchers.IO).launch{
+//            AppDataBese.getDataBase().categoryDao().deleteAll()
+            AppDataBese.getDataBase().getCategoriesDao().insertAll(items)
+        }
+    }
+
+    fun getAllDBProducts(){
+        CoroutineScope(Dispatchers.Main).launch{
+            productData.value = withContext(Dispatchers.IO){AppDataBese.getDataBase().getProductsDao().getAllProducts()}
+        }
+
+    }
+
+    fun getAllDBCategories(){
+        CoroutineScope(Dispatchers.Main).launch{
+            categoryData.value = withContext(Dispatchers.IO){AppDataBese.getDataBase().getCategoriesDao().getAllCategories()}
+        }
+
+    }
+
+
 }
 
 
